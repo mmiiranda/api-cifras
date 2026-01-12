@@ -1,15 +1,19 @@
-PHONY: build
+.PHONY: up down build test
+
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
 build:
 	docker-compose build
 
-PHONY: up
-up: build
-	docker-compose up
+logs:
+	docker-compose logs -f
 
-PHONY: lint
-lint:
-	docker-compose run --rm app pylint --load-plugins pylint_flask /app
-
-PHONY: test
 test:
-	docker-compose run --rm app pytest -vvv --cov=.
+	curl http://localhost:3000/
+	curl http://localhost:3000/health
+	curl "http://localhost:3000/artist/marina-sena"
+	curl "http://localhost:3000/cifra?url=https://www.cifraclub.com.br/marina-sena/lua-cheia/#"

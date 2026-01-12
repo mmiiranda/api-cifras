@@ -1,16 +1,12 @@
-FROM python:3.8-slim-buster
+FROM python:3.9-slim
 
 WORKDIR /app
 
-RUN pip install \
-  pylint \
-  pylint_flask \
-  pytest \
-  pytest-cov
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app/requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY . .
 
-COPY app/ .
+EXPOSE 3000
 
-CMD ["python3", "api.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:3000", "app:app"]
